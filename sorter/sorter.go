@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-  "time"
+	"time"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -73,5 +73,12 @@ func (t *Sorter) Invoke(stub shim.ChaincodeStubInterface, function string, args 
 }
 
 func (t *Sorter) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	if function == "getTimeCost" {
+		var key = args[0]
+		valAsBytes, err := stub.GetState(key)
+		if err == nil {
+			return valAsBytes, nil
+		}
+	}
 	return nil, errors.New("Received unknown function query")
 }
