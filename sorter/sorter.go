@@ -61,11 +61,11 @@ func (t *Sorter) Invoke(stub shim.ChaincodeStubInterface, function string, args 
 		for i := 0; i < len(slice); i++ {
 			slice[i] = num - i
 		}
-		var ts = time.Now().Format(time.RFC850)
+		var ts = time.Now().UnixNano()
 		quicksort(slice, 0, num)
-		ts = time.Now().Format(time.RFC850) - ts
-		numStr, err2 := strconv.Itoa(num)
-		stub.PutState(numStr, []byte(ts))
+		ts = time.Now().UnixNano() - ts
+		numStr := strconv.Itoa(num)
+		stub.PutState(numStr, []byte(strconv.Itoa(int(ts))))
 		return nil, nil
 	}
 
