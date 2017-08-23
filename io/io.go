@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-
+	"time"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -76,12 +76,17 @@ func (t *IO) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 	if err != nil {
 		return nil, err
 	}
+	var ts = time.Now().UnixNano()
 	for i := 0; i < num; i++ {
 		err = stub.PutState(gen_key(start_key+i), []byte(gen_val(start_key+i)))
 		if err != nil {
 			return nil, err
 		}
 	}
+        ts = time.Now().UnixNano() - ts
+	start_key_str := strconv.Itoa(start_key)
+	num_str := strconv.Itoa(num)
+	stub.PutState(start_key_str + "-" + num_str, []byte(strconv.Itoa(int(ts))))
 	return nil, nil
 }
 
