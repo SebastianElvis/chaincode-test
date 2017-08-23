@@ -86,7 +86,10 @@ func (t *IO) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
         ts = time.Now().UnixNano() - ts
 	start_key_str := strconv.Itoa(start_key)
 	num_str := strconv.Itoa(num)
-	stub.PutState(start_key_str + "-" + num_str, []byte(strconv.Itoa(int(ts))))
+	err2 := stub.PutState(start_key_str + "-" + num_str, []byte(strconv.Itoa(int(ts))))
+	if err2 != nil {
+		return nil, err
+	}
 	return nil, nil
 }
 
